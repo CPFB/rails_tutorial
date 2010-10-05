@@ -13,6 +13,7 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
     if @user.save
       flash[:success] = "Welcome to the Twitter Clone!"
+      sign_in @user
       redirect_to @user
     else
       @user.password = ""
