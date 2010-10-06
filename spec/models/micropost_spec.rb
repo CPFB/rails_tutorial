@@ -6,7 +6,7 @@ describe Micropost do
     @attr = { :content => "value for content" }
   end
   
-  it "should create a new instance given valid attributes" do
+  it "should create a micropost given valid attributes" do
     @user.microposts.create!(@attr)
   end
   

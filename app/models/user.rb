@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20101002040250
+# Schema version: 20101006163128
 #
 # Table name: users
 #
@@ -10,6 +10,7 @@
 #  updated_at         :datetime
 #  encrypted_password :string(255)
 #  salt               :string(255)
+#  admin              :boolean
 #
 
 # == Schema Information
@@ -24,10 +25,11 @@
 #  updated_at :datetime
 #
 require 'digest'
-class User < ActiveRecord::Base
+class User < ActiveRecord::Base    
   attr_accessor :password
-  has_many :microposts
   attr_accessible :name, :email, :password, :password_confirmation
+  
+  has_many :microposts, :dependent => :destroy
   
   email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   
