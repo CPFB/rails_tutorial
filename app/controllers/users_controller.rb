@@ -1,8 +1,9 @@
 class UsersController < ApplicationController
-  before_filter :not_signed_in, :only => [:new, :create]
-  before_filter :authenticate,  :only => [:index, :edit, :update, :destroy]
-  before_filter :correct_user,  :only => [:edit, :update]
-  before_filter :admin_user,    :only => :destroy
+  before_filter :not_signed_in,  :only => [:new, :create]
+  before_filter :authenticate,   :only => [:index, :edit, :update, :destroy]
+  before_filter :correct_user,   :only => [:edit, :update]
+  before_filter :admin_user,     :only => :destroy
+  before_filter :not_self,       :only => :destroy
   
   def index
     @title = "All users"
@@ -66,12 +67,25 @@ class UsersController < ApplicationController
   end
   
   def admin_user
-    redirect_to(root_path) unless current_user.admin?
+    unless current_user.admin?
+      flash[:error] = "Only administrators are allowed to destroy users."
+      redirect_to(root_path) 
+    end
   end
   
   def not_signed_in
-    redirect_to(root_path) if current_user
+    if current_user
+      flash[:error] = "You cannot create a new user if you are signed in."
+      redirect_to(root_path) 
+    end
+  end  
+  
+  def not_self
+    if current_user.id == params[:id].to_i
+      flash[:error] = "You cannot delete yourself!"
+      redirect_to(root_path)
+    end
   end
   
-  
+    
 end
