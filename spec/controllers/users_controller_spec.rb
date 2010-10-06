@@ -342,22 +342,22 @@ describe UsersController do
         test_sign_in(@admin)
       end
   
-      # it "should destroy the user" do
-      #   lambda do
-      #     delete :destroy, :id => @user
-      #   end.should change(User, :count).by(-1)
-      # end
-      #   
-      # it "should redirect to the users page" do
-      #   delete :destroy, :id => @user
-      #   response.should redirect_to(users_path)
-      # end
-      # 
-      # it "should not allow the user to destroy themselves" do
-      #   lambda do
-      #     delete :destroy, :id => @admin
-      #   end.should_not change(User, :count)
-      # end
+      it "should destroy the user" do
+        lambda do
+          delete :destroy, :id => @user
+        end.should change(User, :count).by(-1)
+      end
+        
+      it "should redirect to the users page" do
+        delete :destroy, :id => @user
+        response.should redirect_to(users_path)
+      end
+      
+      it "should not allow the user to destroy themselves" do
+        lambda do
+          delete :destroy, :id => @admin
+        end.should_not change(User, :count)
+      end
     end
   end
   

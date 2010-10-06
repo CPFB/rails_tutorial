@@ -81,7 +81,7 @@ class UsersController < ApplicationController
   end  
   
   def not_self
-    if current_user.id == params[:id].to_i
+    if current_user?(User.find(params[:id]))
       flash[:error] = "You cannot delete yourself!"
       redirect_to(root_path)
     end
