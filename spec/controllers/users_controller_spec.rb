@@ -34,6 +34,13 @@ describe UsersController do
       response.should have_selector("input[name='user[password_confirmation]'][type='password']")
     end
     
+    it "should not redirect to the root path if a user is signed in" do
+      @user = Factory(:user)
+      test_sign_in(@user)
+      get :new
+      response.should redirect_to(root_path)
+    end
+    
   end
   
   describe "GET 'show'" do
@@ -116,6 +123,28 @@ describe UsersController do
       it "should sign the user in" do
         post :create, :user => @attr
         controller.should be_signed_in
+      end
+    end
+    
+    describe "signed in user" do
+      before(:each) do
+        @attr = { :name => "New User", :email => "user@example.com",
+                  :password => "foobar", :password_confirmation => "foobar" }
+      end
+      
+      it "should redirect user to root path" do
+        @user = Factory(:user)
+        test_sign_in(@user)
+        post :create, :user => @attr
+        response.should redirect_to(root_path)
+      end
+      
+      it "should not create a new user" do
+        @user = Factory(:user)
+        test_sign_in(@user)
+        lambda do
+          post :create, :user => @attr
+        end.should_not change(User, :count)
       end
     end
   end
