@@ -96,5 +96,48 @@ describe MicropostsController do
     end
   end
   
+  describe "GET 'index'" do
+    before(:each) do
+      @user = Factory(:user)
+    end
+    
+    it "should be successful" do
+      get :index, :user_id => @user.id
+      response.should be_success
+    end
+    
+    it "should show have the right title" do
+      get :index, :user_id => @user.id
+      response.should have_selector("title", :content => @user.name)
+    end
+            
+    it "should include the user's name" do
+      get :index, :user_id => @user.id
+      response.should have_selector("h1", :content => @user.name)
+    end
+    
+    it "should have a profile image" do
+      get :index, :user_id => @user.id
+      response.should have_selector("h1>img", :class => "gravatar")
+    end
+    
+    it "should show the user's microposts" do
+      mp1 = Factory(:micropost, :user => @user, :content => "foobar")
+      mp2 = Factory(:micropost, :user => @user, :content => "bazqax")
+      get :index, :user_id => @user.id
+      response.should have_selector("span.content", :content => mp1.content)
+      response.should have_selector("span.content", :content => mp2.content)
+    end
+    
+    it "should not show a delete link for microposts that were not written by the user" do
+      mp = Factory(:micropost, :user => @user)
+      not_author = Factory(:user, :email => Factory.next(:email))
+      test_sign_in(not_author)
+      get :index, :user_id => @user.id
+      response.should_not have_selector("a", :content => "delete")
+    end
+    
+    
+  end
   
 end
