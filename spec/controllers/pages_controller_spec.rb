@@ -17,6 +17,26 @@ describe PagesController do
       get 'home'
       response.should have_selector("title", :content => @base_title + "Home")
     end
+    
+    describe "when logged in" do
+      before(:each) do
+        @user = Factory(:user)
+        test_sign_in(@user)
+      end
+      
+      it "should have a sidebar with '1 micropost' when the user has one micropost" do
+        mp = Factory(:micropost, :user => @user)
+        get 'home'
+        response.should have_selector("span", :class => "microposts", :content => "1 micropost")
+      end
+      
+      it "should have a sidebar with '2 microposts' when the user has two microposts" do
+        mp1 = Factory(:micropost, :user => @user)
+        mp2 = Factory(:micropost, :user => @user)
+        get 'home'
+        response.should have_selector("span", :class => "microposts", :content => "2 microposts")
+      end
+    end
   end
 
   describe "GET 'contact'" do

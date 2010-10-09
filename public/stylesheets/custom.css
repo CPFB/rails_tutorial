@@ -188,6 +188,7 @@ ul.users {
 
 h1.micropost {
   margin-bottom: 0.3em;
+	float: left;
 }
 
 table.microposts {
@@ -239,4 +240,17 @@ form.new_micropost {
 form.new_micropost textarea {
   height: 4em;
   margin-bottom: 0;
+}
+/* styling for character counter */
+.front .name .count {
+	float: right;
+}
+.red {
+	color: red;
+}
+.dark_red {
+	color: #900;
+}
+.clear {
+	float: none;
 }
