@@ -36,6 +36,18 @@ describe PagesController do
         get 'home'
         response.should have_selector("span", :class => "microposts", :content => "2 microposts")
       end
+      
+      it "should have pagination links when there are over 30 posts" do
+        50.times { Factory(:micropost, :user => @user) }
+        get 'home'
+        response.should have_selector("div.pagination")
+        response.should have_selector("span.disabled", :content => "Previous")
+        response.should have_selector("a", :href => "/pages/home?page=2",
+                                           :content => "2")
+        response.should have_selector("a", :href => "/pages/home?page=2",
+                                           :content => "Next")
+        
+      end
     end
   end
 

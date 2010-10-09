@@ -80,6 +80,14 @@ describe UsersController do
       response.should have_selector("span.content", :content => mp1.content)
       response.should have_selector("span.content", :content => mp2.content)
     end
+    
+    it "should not show a delete link for microposts that were not written by the user" do
+      mp = Factory(:micropost, :user => @user)
+      not_author = Factory(:user, :email => Factory.next(:email))
+      test_sign_in(not_author)
+      get :show, :id => @user
+      response.should_not have_selector("a", :content => "delete")
+    end
   end
   
   describe "POST 'create'" do
